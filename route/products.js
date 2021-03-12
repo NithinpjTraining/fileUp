@@ -2,10 +2,14 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 const multer = require('multer');
+const n=require("../api/controller/controller");
 
+
+//const {upload}=require("../middilware/upload")
 const storage = multer.diskStorage({
     destination: function(req, file, cb) {
       cb(null, './uploads/');
+      
     },
     filename: function(req, file, cb) {
       cb(null, new Date().toISOString() + file.originalname);
@@ -30,48 +34,17 @@ const storage = multer.diskStorage({
     fileFilter: fileFilter
   });
   
-  const Product = require("../models/product");
   
-  router.get("/", (req, res, next) => {
-    Product.find()
-      .select("name price _id productImage")
-      .exec()
-      .then(docs => {
-        const response = {
-          count: docs.length,
-          products: docs.map(doc => {
-            return {
-              name: doc.name,
-              price: doc.price,
-              productImage: doc.productImage,
-              _id: doc._id,
-              request: {
-                type: "GET",
-                url: "http://localhost:3000/products/" + doc._id
-              }
-            };
-          })
-        };
-        //   if (docs.length >= 0) {
-        res.status(200).json(response);
-        //   } else {
-        //       res.status(404).json({
-        //           message: 'No entries found'
-        //       });
-        //   }
-      })
-      .catch(err => {
-        console.log(err);
-        res.status(500).json({
-          error: err
-        });
-      });
-  });
+  
+  router.get("/",n.Retrive) 
+  //upload.single('productImage')
+       router.post("/",upload.single('productImage'),n.insert)
+       //const Product1=require("../db/model/product")
 
-  router.post("/", upload.single('productImage'), (req, res, next) => {
+ /* router.post("/", upload.single('productImage'), (req, res, next) => {
     
 
-    const product = new Product({
+    const product = new Product1({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
         price: req.body.price,
@@ -87,11 +60,9 @@ const storage = multer.diskStorage({
         
         
         //res.send(req.files)
-    });
+    });*/
 
-    router.post("/img", upload.array('productImage',10), (req, res, next) => {
-console.log(req.files)
-res.send("multiple file uploaded sucessfully")
-    })
+    router.post("/img", upload.array('productImage',10), n.mul)
+
     
     module.exports = router;

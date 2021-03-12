@@ -33,5 +33,5 @@ app.use("/products", productRoutes);
 
 
 
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 4002;
 app.listen(port,()=>console.log("server is running"))
